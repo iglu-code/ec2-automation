@@ -1,0 +1,10 @@
+sam deploy --template-file .aws-sam/build/template.yaml \
+--stack-name automate-demo-server-start-stop \
+--s3-bucket iglu-deployments-london \
+--s3-prefix automate-demo-server-start-stop \
+--region eu-west-2 \
+--capabilities CAPABILITY_IAM \
+--no-fail-on-empty-changeset \
+--profile iglu
+
+# --parameter-overrides InstanceId=i-04257cde58a5b074a \

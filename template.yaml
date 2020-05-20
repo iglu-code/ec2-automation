@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM Template that defines lambda functions to automate the process of starting and stopping EC2 instances.
+
+Globals:
+  Function:
+    Timeout: 10
+
+Parameters:
+  InstanceId:
+    Description: Id of the instance to automate the Start and stop time
+    Type: String
+    Default: i-04257cde58a5b074a
+
+Resources:
+  StartEc2Instance:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: start_ec2_instance/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Environment: 
+        Variables:
+          INSTANCE_ID: !Ref InstanceId
+      Policies:
+        - Statement:
+          - Sid: AllowStartEc2Instance
+            Effect: Allow
+            Action:
+            - 'ec2:Start*'
+            Resource: '*'
+      Events:
+        CronEveryDay8am:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 7 * * ? *) # GMT
+            Description: Every day at 08:00 
+            Enabled: True
+
+  StopEc2Instance:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: stop_ec2_instance/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Environment: 
+        Variables:
+          INSTANCE_ID: !Ref InstanceId
+      Policies:
+        - Statement:
+          - Sid: AllowStartEc2Instance
+            Effect: Allow
+            Action:
+            - 'ec2:Stop*'
+            Resource: '*'          
+      Events:
+        CronEveryDay10pm:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 21 * * ? *) # GMT
+            Description: Every day at 22:00 
+            Enabled: True
+
