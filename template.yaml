@@ -8,10 +8,10 @@ Globals:
     Timeout: 10
 
 Parameters:
-  InstanceId:
-    Description: Id of the instance to automate the Start and stop time
+  InstanceIds:
+    Description: Coma separated list of Ids of the instances to automate the Start and stop time
     Type: String
-    Default: i-04257cde58a5b074a
+    Default: i-04257cde58a5b074a,i-02e91ff788eaddafb
 
 Resources:
   StartEc2Instance:
@@ -19,10 +19,10 @@ Resources:
     Properties:
       CodeUri: start_ec2_instance/
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Environment: 
         Variables:
-          INSTANCE_ID: !Ref InstanceId
+          INSTANCE_IDS: !Ref InstanceIds
       Policies:
         - Statement:
           - Sid: AllowStartEc2Instance
@@ -34,7 +34,7 @@ Resources:
         CronEveryDay8am:
           Type: Schedule
           Properties:
-            Schedule: cron(0 7 * * ? *) # GMT
+            Schedule: cron(0 8 * * ? *) # GMT
             Description: Every day at 08:00 
             Enabled: True
 
@@ -43,10 +43,10 @@ Resources:
     Properties:
       CodeUri: stop_ec2_instance/
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Environment: 
         Variables:
-          INSTANCE_ID: !Ref InstanceId
+          INSTANCE_IDS: !Ref InstanceIds
       Policies:
         - Statement:
           - Sid: AllowStartEc2Instance
@@ -58,7 +58,7 @@ Resources:
         CronEveryDay10pm:
           Type: Schedule
           Properties:
-            Schedule: cron(0 21 * * ? *) # GMT
+            Schedule: cron(0 22 * * ? *) # GMT
             Description: Every day at 22:00 
             Enabled: True
 

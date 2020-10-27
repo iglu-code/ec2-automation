@@ -1,8 +1,8 @@
 import boto3
 import os
-instance = os.environ['INSTANCE_ID']
+instance_ids = os.environ['INSTANCE_IDS']
 region = os.environ['AWS_REGION']
-instances = [instance]
+instances = instance_ids.split(',')
 ec2 = boto3.client('ec2', region_name=region)
 
 def lambda_handler(event, context):
